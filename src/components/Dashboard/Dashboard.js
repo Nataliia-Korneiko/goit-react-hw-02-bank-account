@@ -34,6 +34,12 @@ export default class Dashboard extends Component {
     const { balance } = this.state;
     const { amount } = this.state;
 
+    if (amount === 0 || amount < 0) {
+      return toast.warn('Введите сумму для проведения операции!', {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+
     if (balance < amount) {
       return toast.error(
         'На счету недостаточно средств для проведения операции!',
