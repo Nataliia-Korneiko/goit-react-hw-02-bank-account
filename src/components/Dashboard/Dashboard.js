@@ -1,5 +1,3 @@
-/* eslint-disable no-alert */
-/* eslint-disable consistent-return */
 import React, { Component } from 'react';
 import uuid from 'uuid/v1';
 import { ToastContainer, toast } from 'react-toastify';
@@ -25,9 +23,10 @@ export default class Dashboard extends Component {
     }
 
     this.setState(prevState => ({
-      balance: prevState.balance + prevState.amount,
+      balance: +Number(prevState.balance + prevState.amount).toFixed(2),
     }));
     this.changeTransactions('DEPOSIT');
+    return this.reset();
   };
 
   handleWithdraw = () => {
@@ -50,15 +49,18 @@ export default class Dashboard extends Component {
     }
 
     this.setState(prevState => ({
-      balance: prevState.balance - prevState.amount,
+      balance: +Number(prevState.balance - prevState.amount).toFixed(2),
     }));
     this.changeTransactions('WITHDRAW');
+    return this.reset();
+  };
+
+  reset = () => {
+    this.setState({ amount: 0 });
   };
 
   handleChange = e => {
-    console.log('e.target :', e.target);
     const { name, value } = e.target;
-
     this.setState({ [name]: +value });
   };
 
@@ -77,7 +79,7 @@ export default class Dashboard extends Component {
   };
 
   render() {
-    const { transactions } = this.state;
+    const { transactions, amount } = this.state;
     const { balance } = this.state;
     const income = transactions.reduce((acc, el) => {
       let newAcc = acc;
@@ -85,15 +87,11 @@ export default class Dashboard extends Component {
       return newAcc;
     }, 0);
 
-    // console.log('income', income);
-
     const expenses = transactions.reduce((acc, el) => {
       let newAcc = acc;
       if (el.type === 'WITHDRAW') newAcc = acc + el.amount;
       return newAcc;
     }, 0);
-
-    // console.log('expenses', expenses);
 
     return (
       <div className={s.dashboard}>
@@ -101,6 +99,7 @@ export default class Dashboard extends Component {
           handleChange={this.handleChange}
           onDeposit={this.handleDeposit}
           onWithdraw={this.handleWithdraw}
+          amount={amount}
         />
         <Balance balance={balance} income={income} expenses={expenses} />
         <TransactionHistory transactions={transactions} />

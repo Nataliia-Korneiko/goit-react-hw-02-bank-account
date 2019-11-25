@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import s from './controls.module.css';
 
-const Controls = ({ handleChange, onDeposit, onWithdraw }) => (
+const Controls = ({ handleChange, onDeposit, onWithdraw, amount }) => (
   <section className={s.controls}>
     <input
       onChange={handleChange}
@@ -10,6 +10,7 @@ const Controls = ({ handleChange, onDeposit, onWithdraw }) => (
       type="number"
       name="amount"
       min="0"
+      value={amount === 0 ? '' : amount}
     />
     <button onClick={onDeposit} className={s.controls__button} type="button">
       Deposit
@@ -24,6 +25,7 @@ Controls.propTypes = {
   handleChange: PropTypes.func.isRequired,
   onDeposit: PropTypes.func.isRequired,
   onWithdraw: PropTypes.func.isRequired,
+  amount: PropTypes.number.isRequired,
 };
 
 export default Controls;
